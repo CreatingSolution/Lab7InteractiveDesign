@@ -15,21 +15,24 @@ export default function App() {
   // const [direction, setDirection] = useState(1); // 1 for forward, -1 for backward
 
   const handleToggle = () => {
-    // Play forward when starting and backward when stopping.
-    animationRef.current?.reset();
-    // animationRef.current?.setDirection(isPlaying ? -1 : 1);
-
-    animationRef.current?.play();
-
-    setIsPlaying((previous) => !previous);
+    if (isPlaying) {
+      // Current status is Playing: animate from Playing to Paused (frames 8 to 16) and hold
+      animationRef.current?.play(8, 16);
+      setIsPlaying(false);
+    } else {
+      // Current status is Paused: animate from Paused to Playing (frames 0 to 8) and hold
+      animationRef.current?.play(0, 8);
+      setIsPlaying(true);
+    }
   };
 
   const handleReplay = () => {
-    setIsPlaying(false);
-    animationRef.current?.reset();
-    // animationRef.current?.setDirection(1);
-    animationRef.current?.play();
-    setIsPlaying(true);
+    // Replay the transition into the current active state
+    if (isPlaying) {
+      animationRef.current?.play(0, 8);
+    } else {
+      animationRef.current?.play(8, 16);
+    }
   };
 
   return (
